@@ -27,7 +27,7 @@ class CursoController extends Controller
         $request->validate([
             'nombre' => 'required',
             'descripcion' => 'required',
-            'miniatura' => 'nullable|image|max:2048',
+            'miniatura' => 'nullable|image',
         ]);
 
         $ruta = null;

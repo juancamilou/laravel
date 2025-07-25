@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Crear curso</title>
-    <link rel="stylesheet" href="../css/create.blade.css">
+<link rel="stylesheet" href="{{ asset('css/createCurso.css') }}">
 </head>
 <body>
 <div class="form-container">
