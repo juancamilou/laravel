@@ -20,7 +20,7 @@ class AuthController extends Controller
         $request->validate([
             'name' => 'required',
             'email' => 'required|email|unique:users',
-            'password' => 'required|min:6',
+            'password' => 'required|min:6|confirmed',
         ]);
 
         try {
@@ -65,4 +65,14 @@ class AuthController extends Controller
         Auth::logout();
         return redirect('/login');
     }
+public function getUsuariosRegistrados()
+{
+    $usuarios = User::where('role', 'student')
+                    ->select('id', 'name', 'email', 'created_at')
+                    ->get();
+
+    return response()->json($usuarios);
+}
+
+
 }

@@ -316,3 +316,42 @@ nav ul li form button:hover {
 #descripcionCurso::-webkit-scrollbar-thumb:hover {
     background: #555;
 }
+.estudiantes-modal {
+    max-width: 800px;
+    max-height: 80vh;
+    overflow: hidden;
+}
+
+.modal-title {
+    margin-bottom: -50px;
+    font-size: 22px;
+    text-align: center;
+    color: #1a1a2e;
+}
+
+.tabla-scroll {
+    overflow-y: auto;
+    max-height: 400px;
+}
+
+.tabla-estudiantes {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tabla-estudiantes thead {
+    background-color: #1a1a2e;
+    color: white;
+}
+
+.tabla-estudiantes th,
+.tabla-estudiantes td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    font-size: 14px;
+}
+
+.tabla-estudiantes td {
+    color: #333;
+}

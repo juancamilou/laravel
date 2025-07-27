@@ -61,3 +61,34 @@ window.onclick = function (event) {
         cerrarModal();
     }
 };
+document
+    .getElementById("card-estudiantes")
+    .addEventListener("click", async function () {
+        try {
+            const response = await fetch("/api/usuarios-registrados"); // Ruta al controlador
+            const estudiantes = await response.json();
+            const tbody = document.getElementById("lista-estudiantes");
+
+            tbody.innerHTML = ""; // Limpia el contenido
+
+            estudiantes.forEach((est) => {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                <td>${est.name}</td>
+                <td>${est.email}</td>
+                <td>${new Date(est.created_at).toLocaleDateString()}</td>
+            `;
+                tbody.appendChild(tr);
+            });
+
+            document.getElementById("modal-estudiantes").style.display =
+                "block";
+        } catch (error) {
+            console.error("Error al cargar estudiantes:", error);
+        }
+    });
+
+function cerrarModalEstudiantes() {
+    document.getElementById("modal-estudiantes").style.display = "none";
+}
+
