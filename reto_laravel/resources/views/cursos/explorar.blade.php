@@ -5,15 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Explorar Cursos</title>
     <link rel="stylesheet" href="{{ asset('css/explorarCursos.css') }}">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
 <nav>    
-<div class="logo">
-    <img src="{{ asset('img/educursos.png') }}" alt="EduCursos">
-</div>    <ul>
+    <div class="logo">
+        <img src="{{ asset('img/educursos.png') }}" alt="EduCursos">
+    </div>    
+
+    @auth
+    <ul>
         <li><a href="{{ route('dashboard') }}">Home</a></li>
         <li><a href="{{ route('cursos.explorar') }}">Explorar</a></li>
         @if(auth()->user()->role === 'admin')
@@ -26,16 +28,20 @@
             </form>
         </li>
     </ul>
+    @else
+    <ul>
+        <li><a href="{{ route('welcome') }}">Iniciar sesión</a></li>
+    </ul>
+    @endauth
 </nav>
 
 <div class="container">
     <h2>Explorar Cursos Disponibles</h2>
 
-<form class="search" method="GET" action="{{ route('cursos.explorar') }}" role="search">
-    <input type="text" name="buscar" placeholder="Buscar cursos por nombre..." value="{{ request('buscar') }}" aria-label="Buscar cursos">
-    <button type="submit"><i class="fas fa-search"></i></button>
-</form>
-
+    <form class="search" method="GET" action="{{ route('cursos.explorar') }}" role="search">
+        <input type="text" name="buscar" placeholder="Buscar cursos por nombre..." value="{{ request('buscar') }}" aria-label="Buscar cursos">
+        <button type="submit"><i class="fas fa-search"></i></button>
+    </form>
 
     @if($cursos->isEmpty())
         <div class="no-result">No se encontraron cursos.</div>
@@ -45,29 +51,36 @@
                 <div class="card">
                     @if ($curso->miniatura)
                         <img src="{{ asset('storage/' . $curso->miniatura) }}" alt="Miniatura del curso">
+                    @else
+                        <img src="https://via.placeholder.com/400x200?text=Sin+imagen" alt="Sin miniatura">
                     @endif
+
                     <div class="content">
                         <h4>{{ $curso->nombre }}</h4>
-                        <button class="ver-descripcion-btn" onclick="mostrarModal(`{{ addslashes($curso->nombre) }}`, `{{ addslashes($curso->descripcion) }}`)">Leer descripción
+                        <button class="ver-descripcion-btn" onclick="mostrarModal(`{{ addslashes($curso->nombre) }}`, `{{ addslashes($curso->descripcion) }}`)">
+                            Leer descripción
                         </button>
                     </div>
-@php
-    $yaInscrito = in_array($curso->id, $inscritos);
-@endphp
 
-<form action="{{ $yaInscrito ? route('cursos.desinscribirse', $curso->id) : route('cursos.inscribirse', $curso->id) }}" method="POST">
-    @csrf
-    <button type="submit" class="{{ $yaInscrito ? 'btn-desinscribirse' : 'btn-inscribirse' }}">
-        {{ $yaInscrito ? 'Desinscribirme' : 'Inscribirme' }}
-    </button>
-</form>
-
+                    @auth
+                        @php
+                            $yaInscrito = in_array($curso->id, $inscritos);
+                        @endphp
+                        <form action="{{ $yaInscrito ? route('cursos.desinscribirse', $curso->id) : route('cursos.inscribirse', $curso->id) }}" method="POST">
+                            @csrf
+                            <button type="submit" class="{{ $yaInscrito ? 'btn-desinscribirse' : 'btn-inscribirse' }}">
+                                {{ $yaInscrito ? 'Desinscribirme' : 'Inscribirme' }}
+                            </button>
+                        </form>
+                    @else
+<a href="{{ route('welcome') }}" class="btn-login-redirect">Inicia sesión para inscribirte</a>
+                    @endauth
                 </div>
             @endforeach
         </div>
     @endif
 </div>
-<!-- footer -->
+
 <footer class="main-footer">
     <div class="footer-container">
         <div class="footer-section">
@@ -94,7 +107,8 @@
         &copy; 2025 EduCursos. Todos los derechos reservados.
     </div>
 </footer>
-<!-- modal descripcion -->
+
+<!-- Modal descripción -->
 <div id="descripcionModal" class="modal">
     <div class="modal-content">
         <span class="cerrar" onclick="cerrarModal()">&times;</span>
@@ -102,6 +116,7 @@
         <p id="descripcionCurso"></p>
     </div>
 </div>
+
 <script src="{{ asset('js/explorarCursos.js') }}"></script>
 </body>
 </html>

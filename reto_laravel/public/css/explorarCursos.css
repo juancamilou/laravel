@@ -156,6 +156,23 @@ form.search button:hover {
     cursor: pointer;
     font-size: 14px;
 }
+.btn-login-redirect {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #1a1a2e;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.btn-login-redirect:hover {
+    background-color: #007bff;
+    color: #fff;
+}
 
 /* ========== BOTÓN VER DESCRIPCIÓN ========== */
 .ver-descripcion-btn {
