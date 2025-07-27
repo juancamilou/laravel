@@ -5,13 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crear curso</title>
     <link rel="stylesheet" href="{{ asset('css/createCurso.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <nav>    
-<div class="logo">
-    <img src="{{ asset('img/educursos.png') }}" alt="EduCursos">
-</div>    <ul>
-        <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
+
+<nav>    
+    <div class="logo">
+        <img src="{{ asset('img/educursos.png') }}" alt="EduCursos">
+    </div>
+    <ul>
+        <li><a href="{{ route('dashboard') }}">Home</a></li>
         <li><a href="{{ route('cursos.explorar') }}">Explorar</a></li>
         @if(auth()->user()->role === 'admin')
             <li><a href="{{ route('cursos.index') }}">Administrar Cursos</a></li>
@@ -24,8 +27,9 @@
         </li>
     </ul>
 </nav>
+
 <div class="form-container">
-    <h2>Crear curso</h2>
+    <h2>Crear nuevo curso</h2>
 
     @if ($errors->any())
         <div class="error">
@@ -39,36 +43,44 @@
 
     <form action="{{ route('cursos.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
-        <input type="text" name="nombre" placeholder="Nombre del curso" required>
-        <textarea name="descripcion" placeholder="Descripción del curso" rows="4" required></textarea>
-        <input type="file" name="miniatura" accept="image/*">
-        <img id="preview" src="#" alt="Vista previa" style="display:none; max-width:200px; margin-top:10px;">
+        <label for="nombre">Nombre del curso</label>
+        <input type="text" name="nombre" id="nombre" required>
 
+        <label for="descripcion">Descripción del curso</label>
+        <textarea name="descripcion" id="descripcion" rows="4" required></textarea>
 
-        <button type="submit">Guardar</button>
+        <label for="miniatura">Miniatura del curso</label>
+<label for="miniatura" class="custom-file-upload">
+    <i class="fas fa-upload"></i> Subir imagen del curso
+</label>
+<input type="file" name="miniatura" id="miniatura" accept="image/*" style="display: none;">
+
+        <img id="preview" src="#" alt="Vista previa" style="display:none;" />
+
+        <button type="submit">Guardar curso</button>
     </form>
-    <a href="{{ route('cursos.index') }}">← Volver</a>
+
+<a href="{{ route('cursos.index') }}" class="btn-volver"><i class="fas fa-arrow-left"></i> Volver</a>
 </div>
+
 <script>
-    <script>
-    document.querySelector('input[name="miniatura"]').addEventListener('change', function (e) {
-        const file = e.target.files[0];
-        const preview = document.getElementById('preview');
+document.getElementById('miniatura').addEventListener('change', function (e) {
+    const file = e.target.files[0];
+    const preview = document.getElementById('preview');
 
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                preview.src = e.target.result;
-                preview.style.display = 'block';
-            };
-            reader.readAsDataURL(file);
-        } else {
-            preview.src = '#';
-            preview.style.display = 'none';
-        }
-    });
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            preview.src = e.target.result;
+            preview.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+    } else {
+        preview.src = '#';
+        preview.style.display = 'none';
+    }
+});
 </script>
 
-</script>
 </body>
 </html>

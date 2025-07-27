@@ -73,7 +73,7 @@ public function index()
         $request->validate([
             'nombre' => 'required',
             'descripcion' => 'required',
-            'miniatura' => 'nullable|image|max:2048',
+            'miniatura' => 'nullable|image',
         ]);
 
         $ruta = $curso->miniatura;
@@ -140,19 +140,29 @@ public function explorar(Request $request)
 {
     $query = Curso::query();
 
-    // Buscar por nombre
     if ($request->filled('buscar')) {
         $query->where('nombre', 'LIKE', '%' . $request->buscar . '%');
     }
 
-    // Puedes agregar más filtros aquí (por ejemplo por categoría si existiera)
     $cursos = $query->latest()->get();
 
-    return view('cursos.explorar', compact('cursos'));
+    $inscritos = auth()->user()->cursos->pluck('id')->toArray(); 
+    return view('cursos.explorar', compact('cursos', 'inscritos'));
 }
-public function verInscritos($id) {
-    $curso = Curso::with('estudiantes')->findOrFail($id);
-    return view('admin.inscritos', compact('curso'));
+
+public function verInscritos($id)
+{
+    $inscripciones = Inscripcion::with('usuario', 'curso')->where('curso_id', $id)->get();
+    return view('cursos.inscritos', compact('inscripciones'));
 }
+
+public function desinscribir($id)
+{
+    $inscripcion = Inscripcion::findOrFail($id);
+    $inscripcion->delete();
+
+    return redirect()->route('cursos.inscritos')->with('success', 'Usuario desinscrito.');
+}
+
 
 }

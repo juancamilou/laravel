@@ -5,37 +5,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro</title>
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: 'Segoe UI', sans-serif;
-            background-color: #f4f6f8;
+    font-family: "Segoe UI", sans-serif;
+            background: linear-gradient(to right, #1a1a2e, #16213e);
             display: flex;
             align-items: center;
             justify-content: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
         }
 
         .register-box {
             background: white;
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            padding: 40px 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
             width: 100%;
-            max-width: 400px;
+            max-width: 420px;
+            animation: fadeIn 0.6s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .register-box h2 {
-            margin-bottom: 20px;
-            color: #333;
+            margin-bottom: 25px;
+            color: #1a1a2e;
             text-align: center;
+            font-weight: 600;
         }
 
         .register-box input {
             width: 100%;
             padding: 12px;
-            margin-bottom: 15px;
+            margin-bottom: 16px;
             border: 1px solid #ccc;
-            border-radius: 6px;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: border-color 0.3s;
+        }
+
+        .register-box input:focus {
+            border-color: #007bff;
+            outline: none;
         }
 
         .register-box button {
@@ -44,39 +62,57 @@
             background-color: #1a1a2e;
             color: white;
             border: none;
-            border-radius: 6px;
+            border-radius: 8px;
             cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+
+        .register-box button:hover {
+            background-color: #007bff;
         }
 
         .register-box a {
             display: block;
             text-align: center;
-            margin-top: 15px;
+            margin-top: 18px;
             text-decoration: none;
             color: #007bff;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .register-box a:hover {
+            color: #0056b3;
         }
 
         .error {
-            color: red;
-            margin-bottom: 15px;
+            color: #dc3545;
+            margin-bottom: 18px;
             text-align: center;
+            font-size: 14px;
         }
     </style>
 </head>
 <body>
 <div class="register-box">
     <h2>Registro</h2>
+
     @if ($errors->any())
         <div class="error">{{ $errors->first() }}</div>
     @endif
+
     <form method="POST" action="{{ route('register') }}">
         @csrf
-        <input type="text" name="name" placeholder="Nombre completo" required>
-        <input type="email" name="email" placeholder="Correo electrónico" required>
+        <input type="text" name="name" placeholder="Nombre completo" value="{{ old('name') }}" required>
+        <input type="email" name="email" placeholder="Correo electrónico" value="{{ old('email') }}" required>
         <input type="password" name="password" placeholder="Contraseña" required>
+        <input type="password" name="password_confirmation" placeholder="Confirmar contraseña" required>
         <button type="submit">Registrarse</button>
     </form>
-    <a href="{{ route('login') }}">Ya tengo una cuenta</a>
+
+    <a href="{{ route('login') }}">¿Ya tienes cuenta? Inicia sesión</a>
 </div>
 </body>
 </html>

@@ -14,7 +14,7 @@
 <div class="logo">
     <img src="{{ asset('img/educursos.png') }}" alt="EduCursos">
 </div>    <ul>
-        <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
+        <li><a href="{{ route('dashboard') }}">Home</a></li>
         <li><a href="{{ route('cursos.explorar') }}">Explorar</a></li>
         @if(auth()->user()->role === 'admin')
             <li><a href="{{ route('cursos.index') }}">Administrar Cursos</a></li>

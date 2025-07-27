@@ -22,9 +22,14 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('aut
 
 // Rutas para administradores
 Route::middleware(['auth', 'admin'])->group(function () {
-    Route::get('/admin/dashboard', [DashboardController::class, 'adminDashboard'])->name('admin.dashboard');
-    Route::resource('cursos', CursoController::class);
-    Route::get('/cursos/{id}/inscritos', [CursoController::class, 'verInscritos'])->name('cursos.inscritos');
+Route::get('/admin/dashboard', [DashboardController::class, 'adminDashboard'])->name('admin.dashboard');
+Route::resource('cursos', CursoController::class);
+Route::get('/cursos/{id}/inscritos', [CursoController::class, 'verInscritos'])->name('cursos.inscritos');
+Route::get('/usuarios/ajax', [App\Http\Controllers\AuthController::class, 'getUsuariosRegistrados']);
+Route::get('/api/usuarios-registrados', [AuthController::class, 'getUsuariosRegistrados'])->middleware('auth');
+
+
+
 });
 
 // Rutas para estudiantes autenticados

@@ -14,7 +14,7 @@
 <div class="logo">
     <img src="{{ asset('img/educursos.png') }}" alt="EduCursos">
 </div>    <ul>
-        <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
+        <li><a href="{{ route('dashboard') }}">Home</a></li>
         <li><a href="{{ route('cursos.explorar') }}">Explorar</a></li>
         @if(auth()->user()->role === 'admin')
             <li><a href="{{ route('cursos.index') }}">Administrar Cursos</a></li>
@@ -51,10 +51,17 @@
                         <button class="ver-descripcion-btn" onclick="mostrarModal(`{{ addslashes($curso->nombre) }}`, `{{ addslashes($curso->descripcion) }}`)">Leer descripción
                         </button>
                     </div>
-                    <form action="{{ route('cursos.inscribirse', $curso->id) }}" method="POST">
-                        @csrf
-                        <button type="submit">Inscribirme</button>
-                    </form>
+@php
+    $yaInscrito = in_array($curso->id, $inscritos);
+@endphp
+
+<form action="{{ $yaInscrito ? route('cursos.desinscribirse', $curso->id) : route('cursos.inscribirse', $curso->id) }}" method="POST">
+    @csrf
+    <button type="submit" class="{{ $yaInscrito ? 'btn-desinscribirse' : 'btn-inscribirse' }}">
+        {{ $yaInscrito ? 'Desinscribirme' : 'Inscribirme' }}
+    </button>
+</form>
+
                 </div>
             @endforeach
         </div>

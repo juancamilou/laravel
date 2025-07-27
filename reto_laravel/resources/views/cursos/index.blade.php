@@ -15,7 +15,7 @@
     <img src="{{ asset('img/educursos.png') }}" alt="EduCursos">
 </div>
     <ul>
-        <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
+        <li><a href="{{ route('dashboard') }}">Home</a></li>
         <li><a href="{{ route('cursos.explorar') }}">Explorar</a></li>
         @if(auth()->user()->role === 'admin')
             <li><a href="{{ route('cursos.index') }}">Administrar Cursos</a></li>
@@ -41,13 +41,14 @@
         </div>
     </div>
 
-    <div class="stat-card green">
-        <div class="icon"><i class="fas fa-user-graduate"></i></div>
-        <div>
-            <div class="label">Total Estudiantes</div>
-            <div class="value">{{ $totalEstudiantes }}</div>
-        </div>
+<div class="stat-card green" id="card-estudiantes">
+    <div class="icon"><i class="fas fa-user-graduate"></i></div>
+    <div>
+        <div class="label">Total Estudiantes</div>
+        <div class="value">{{ $totalEstudiantes }}</div>
     </div>
+</div>
+
 
     <div class="stat-card yellow chart-card">
         <h4>Inscripciones por curso</h4>
@@ -112,6 +113,26 @@
         <p id="descripcionCurso"></p>
     </div>
 </div>
+<div id="modal-estudiantes" class="modal">
+    <div class="modal-content estudiantes-modal">
+        <span class="cerrar" onclick="cerrarModalEstudiantes()">&times;</span>
+        <h3 class="modal-title">Usuarios Registrados</h3>
+        <div class="tabla-scroll">
+            <table class="tabla-estudiantes">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Correo</th>
+                        <th>Registrado</th>
+                    </tr>
+                </thead>
+                <tbody id="lista-estudiantes">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
 
 <script>
     const cursoNombres = @json($cursoNombres);
