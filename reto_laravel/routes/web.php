@@ -5,10 +5,12 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CursoController;
 use App\Http\Controllers\DashboardController;
 
-// Página de bienvenida
-Route::get('/', function () {
+Route::get('/welcome', function () {
     return view('welcome');
-});
+})->name('welcome');
+
+Route::get('/', [CursoController::class, 'explorar'])->name('cursos.explorar.public');
+
 
 // Registro y login
 Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');

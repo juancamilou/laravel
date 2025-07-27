@@ -146,9 +146,13 @@ public function explorar(Request $request)
 
     $cursos = $query->latest()->get();
 
-    $inscritos = auth()->user()->cursos->pluck('id')->toArray(); 
+    $inscritos = auth()->check()
+        ? auth()->user()->cursos->pluck('id')->toArray()
+        : [];
+
     return view('cursos.explorar', compact('cursos', 'inscritos'));
 }
+
 
 public function verInscritos($id)
 {
