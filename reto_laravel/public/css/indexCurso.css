@@ -3,7 +3,6 @@
     margin: 0;
     padding: 0;
 }
-
 body {
     font-family: "Segoe UI", sans-serif;
     background: #f0f2f5;
@@ -11,7 +10,6 @@ body {
     color: #333;
 }
 
-/* ========== nav ========== */
 nav {
     position: fixed;
     top: 0;
@@ -32,6 +30,7 @@ nav .logo {
     align-items: center;
     font-weight: bold;
     font-size: 20px;
+    position: relative;
 }
 
 nav .logo img {
@@ -60,66 +59,52 @@ nav ul li form button:hover {
     text-decoration: underline;
 }
 
-/* ========== CONTAINER ========== */
 .container {
     max-width: 1200px;
     margin: auto;
-    padding: 30px 20px;
+    padding: 20px;
 }
 
-h2 {
-    text-align: center;
-    margin-bottom: 30px;
-}
-
-/* ========== BUSCADOR MEJORADO ========== */
-form.search {
+.top {
     display: flex;
-    max-width: 500px;
-    margin: 0 auto 40px;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    background-color: #fff;
-    border: 1px solid #ccc;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
 }
 
-form.search input {
-    flex: 1;
-    padding: 12px 15px;
-    border: none;
-    font-size: 16px;
-    outline: none;
+.top h2 {
+    margin: 0;
 }
 
-form.search button {
-    background-color: #007bff;
-    border: none;
+.top a {
+    background-color: #28a745;
     color: white;
     padding: 12px 20px;
+    text-decoration: none;
+    border-radius: 6px;
     font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
 }
 
-form.search button:hover {
-    background-color: #0056b3;
+.alert {
+    background: #d4edda;
+    color: #155724;
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 25px;
 }
 
-/* ========== TARJETAS ========== */
-.grid {
+.cards {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 25px;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 30px;
 }
 
 .card {
-    background: white;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
-    display: flex;
-    flex-direction: column;
+    background-color: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
     transition: transform 0.2s;
 }
 
@@ -129,35 +114,121 @@ form.search button:hover {
 
 .card img {
     width: 100%;
-    height: 180px;
+    height: 200px;
     object-fit: cover;
-}
-
-.card .content {
-    padding: 15px;
-    flex-grow: 1;
+    border-radius: 8px;
+    margin-bottom: 15px;
 }
 
 .card h4 {
-    margin-bottom: 10px;
-    font-size: 18px;
+    margin: 0;
+    font-size: 20px;
 }
 
-.card form {
-    padding: 10px 15px 15px;
+.card-actions {
+    margin-top: 15px;
 }
 
-.card form button {
-    background-color: #28a745;
-    border: none;
+.card-actions a,
+.card-actions form button {
+    background-color: #007bff;
     color: white;
-    padding: 10px 15px;
-    border-radius: 6px;
-    cursor: pointer;
+    border: none;
+    padding: 8px 14px;
+    margin-right: 6px;
+    text-decoration: none;
+    border-radius: 5px;
     font-size: 14px;
+    cursor: pointer;
 }
 
-/* ========== BOTÓN VER DESCRIPCIÓN ========== */
+.card-actions form {
+    display: inline;
+}
+
+.card-actions form button {
+    background-color: #dc3545;
+}
+
+.empty-msg {
+    text-align: center;
+    padding: 30px;
+    background-color: white;
+    border-radius: 12px;
+    font-size: 18px;
+    color: #666;
+}
+.stats-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: space-between;
+    margin-bottom: 30px;
+}
+
+.stat-card {
+    flex: 1;
+    min-width: 280px;
+    background: #fff;
+    border-left: 5px solid;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.stat-card.chart-card {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.stat-card.chart-card canvas {
+    max-width: 220px;
+    height: auto;
+}
+
+.stat-card .icon {
+    font-size: 32px;
+}
+
+.stat-card .label {
+    font-size: 14px;
+    color: #888;
+}
+
+.stat-card .value {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/* Colores por tipo */
+.stat-card.blue {
+    border-color: #007bff;
+}
+
+.stat-card.blue .icon {
+    color: #007bff;
+}
+
+.stat-card.green {
+    border-color: #28a745;
+}
+
+.stat-card.green .icon {
+    color: #28a745;
+}
+
+.stat-card.yellow {
+    border-color: #ffc107;
+}
+
+.stat-card.yellow .icon {
+    color: #ffc107;
+}
+
 .ver-descripcion-btn {
     background-color: #6f42c1;
     color: white;
@@ -169,20 +240,6 @@ form.search button:hover {
     font-size: 14px;
 }
 
-/* ========== MENSAJE SIN RESULTADOS ========== */
-.no-result {
-    display: none;
-    text-align: center;
-    color: #777;
-    font-size: 18px;
-    margin-top: 30px;
-}
-
-.no-result.show {
-    display: block;
-}
-
-/* ========== MODAL ========== */
 .modal {
     display: none;
     position: fixed;
@@ -231,19 +288,17 @@ form.search button:hover {
         transform: translateY(0);
     }
 }
-
 #descripcionCurso {
     margin-top: 10px;
     font-size: 16px;
     color: #333;
     line-height: 1.4;
-    max-height: 300px;
-    overflow-y: auto;
+    max-height: 300px; /* Altura máxima visible */
+    overflow-y: auto; /* Scroll solo si es necesario */
     padding-right: 10px;
     word-wrap: break-word;
     white-space: pre-wrap;
 }
-
 #descripcionCurso::-webkit-scrollbar {
     width: 8px;
 }
@@ -260,57 +315,4 @@ form.search button:hover {
 
 #descripcionCurso::-webkit-scrollbar-thumb:hover {
     background: #555;
-}
-
-/* ========== FOOTER ========== */
-.main-footer {
-    background-color: #1a1a2e;
-    color: #fff;
-    padding: 40px 20px 20px;
-    margin-top: 50px;
-}
-
-.footer-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 40px;
-    justify-content: space-between;
-    max-width: 1200px;
-    margin: auto;
-}
-
-.footer-section {
-    flex: 1 1 250px;
-}
-
-.footer-section h4 {
-    font-size: 18px;
-    margin-bottom: 15px;
-    color: #ffc107;
-}
-
-.footer-section p {
-    font-size: 14px;
-    margin-bottom: 10px;
-    line-height: 1.6;
-}
-
-.social-icons a {
-    color: #fff;
-    font-size: 24px;
-    margin-right: 12px;
-    transition: color 0.3s ease;
-}
-
-.social-icons a:hover {
-    color: #ffc107;
-}
-
-.footer-bottom {
-    text-align: center;
-    margin-top: 30px;
-    font-size: 14px;
-    color: #aaa;
-    border-top: 1px solid #333;
-    padding-top: 15px;
 }

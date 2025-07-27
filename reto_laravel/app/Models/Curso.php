@@ -20,5 +20,16 @@ class Curso extends Model
 {
     return $this->belongsToMany(User::class);
 }
+public function inscripciones()
+{
+    return $this->hasMany(Inscripcion::class);
+}
+
+public function usuarios()
+{
+    return $this->belongsToMany(User::class, 'inscripcions', 'curso_id', 'user_id');
+}
+
+
 
 }

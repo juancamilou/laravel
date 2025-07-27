@@ -29,7 +29,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
 // Rutas para estudiantes autenticados
 Route::middleware(['auth'])->group(function () {
-    Route::post('/cursos/{id}/inscribirse', [CursoController::class, 'inscribirse'])->name('cursos.inscribirse');
-    Route::post('/cursos/{id}/desinscribirse', [CursoController::class, 'desinscribirse'])->name('cursos.desinscribirse');
-    Route::get('/explorar-cursos', [CursoController::class, 'explorar'])->name('cursos.explorar');
+Route::post('/cursos/{id}/inscribirse', [CursoController::class, 'inscribirse'])->name('cursos.inscribirse');
+Route::post('/cursos/{id}/desinscribirse', [CursoController::class, 'desinscribirse'])->name('cursos.desinscribirse');
+Route::get('/explorar-cursos', [CursoController::class, 'explorar'])->name('cursos.explorar');
 });

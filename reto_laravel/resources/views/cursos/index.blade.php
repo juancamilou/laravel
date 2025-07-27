@@ -2,239 +2,124 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Cursos</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f6f8;
-            margin: 0;
-            padding-top: 80px;
-        }
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrar Cursos</title>
+    <link rel="stylesheet" href="{{ asset('css/indexCurso.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-        /* Barra de navegación */
-        header {
-            background-color: #343a40;
-            color: white;
-            padding: 15px 30px;
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 1000;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .nav-left h1 {
-            font-size: 20px;
-            margin: 0;
-        }
-
-        .nav-right {
-            display: flex;
-            align-items: center;
-        }
-
-        .nav-right a, .nav-right form button {
-            color: white;
-            margin-left: 20px;
-            text-decoration: none;
-            background: none;
-            border: none;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        .nav-right form {
-            margin: 0;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: auto;
-            padding: 20px;
-        }
-
-        .top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-        }
-
-        .top h2 {
-            margin: 0;
-        }
-
-        .top a {
-            background-color: #28a745;
-            color: white;
-            padding: 12px 20px;
-            text-decoration: none;
-            border-radius: 6px;
-            font-size: 16px;
-        }
-
-        .alert {
-            background: #d4edda;
-            color: #155724;
-            padding: 12px;
-            border-radius: 6px;
-            margin-bottom: 25px;
-        }
-
-        .cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 30px;
-        }
-
-        .card {
-            background-color: white;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            position: relative;
-            transition: transform 0.2s;
-        }
-
-        .card:hover {
-            transform: scale(1.02);
-        }
-
-        .card img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 8px;
-            margin-bottom: 15px;
-        }
-
-        .card h4 {
-            margin: 0;
-            font-size: 20px;
-        }
-
-        /* Tooltip */
-        .tooltip {
-            position: relative;
-            display: inline-block;
-        }
-
-        .tooltip .tooltip-text {
-            visibility: hidden;
-            width: 240px;
-            background-color: #333;
-            color: #fff;
-            text-align: left;
-            border-radius: 6px;
-            padding: 10px;
-            position: absolute;
-            z-index: 1;
-            bottom: 110%;
-            left: 50%;
-            transform: translateX(-50%);
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .tooltip:hover .tooltip-text {
-            visibility: visible;
-            opacity: 1;
-        }
-
-        .card-actions {
-            margin-top: 15px;
-        }
-
-        .card-actions a, .card-actions form button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 8px 14px;
-            margin-right: 6px;
-            text-decoration: none;
-            border-radius: 5px;
-            font-size: 14px;
-            cursor: pointer;
-        }
-
-        .card-actions form {
-            display: inline;
-        }
-
-        .card-actions form button {
-            background-color: #dc3545;
-        }
-
-        .empty-msg {
-            text-align: center;
-            padding: 30px;
-            background-color: white;
-            border-radius: 12px;
-            font-size: 18px;
-            color: #666;
-        }
-    </style>
 </head>
 <body>
-
-<header>
-    <div class="nav-left">
-        <h1>Cursos Laravel</h1>
-    </div>
-    <div class="nav-right">
-        <a href="/dashboard">Inicio</a>
-        <a href="{{ route('cursos.index') }}">Cursos</a>
-        <span style="color: #ccc;">{{ auth()->user()->name }} ({{ auth()->user()->role }})</span>
-        <form method="POST" action="/logout">
-            @csrf
-            <button type="submit">Cerrar sesión</button>
-        </form>
-    </div>
-</header>
+<nav>    
+<div class="logo">
+    <img src="{{ asset('img/educursos.png') }}" alt="EduCursos">
+</div>
+    <ul>
+        <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
+        <li><a href="{{ route('cursos.explorar') }}">Explorar</a></li>
+        @if(auth()->user()->role === 'admin')
+            <li><a href="{{ route('cursos.index') }}">Administrar Cursos</a></li>
+        @endif
+        <li>
+            <form action="{{ route('logout') }}" method="POST">
+                @csrf
+                <button type="submit">Cerrar sesión</button>
+            </form>
+        </li>
+    </ul>
+</nav>
 
 <div class="container">
-    <div class="top">
-        <h2>Listado de Cursos</h2>
-        @if(auth()->user()->role === 'admin')
-            <a href="{{ route('cursos.create') }}">+ Crear nuevo</a>
-        @endif
+
+@if(auth()->user()->role === 'admin')
+<div class="stats-container">
+    <div class="stat-card blue">
+        <div class="icon"><i class="fas fa-book-open"></i></div>
+        <div>
+            <div class="label">Total Cursos</div>
+            <div class="value">{{ $totalCursos }}</div>
+        </div>
     </div>
 
-    @if (session('success'))
+    <div class="stat-card green">
+        <div class="icon"><i class="fas fa-user-graduate"></i></div>
+        <div>
+            <div class="label">Total Estudiantes</div>
+            <div class="value">{{ $totalEstudiantes }}</div>
+        </div>
+    </div>
+
+    <div class="stat-card yellow chart-card">
+        <h4>Inscripciones por curso</h4>
+        <canvas id="graficoPastel"></canvas>
+    </div>
+</div>
+@endif
+
+
+
+    <div class="top">
+        <h2>Gestión de Cursos</h2>
+        <a href="{{ route('cursos.create') }}">+ Crear nuevo curso</a>
+    </div>
+
+    @if(session('success'))
         <div class="alert">{{ session('success') }}</div>
     @endif
 
-    @if ($cursos->isEmpty())
-        <div class="empty-msg">No hay cursos disponibles.</div>
-    @else
+    @if($cursos->count())
         <div class="cards">
-            @foreach ($cursos as $curso)
-                <div class="card">
-                    @if ($curso->miniatura)
-                        <img src="{{ asset('storage/' . $curso->miniatura) }}" alt="Miniatura del curso">
-                    @endif
-                    <h4 class="tooltip">
-                        {{ $curso->nombre }}
-                        <span class="tooltip-text">{{ $curso->descripcion }}</span>
-                    </h4>
+@foreach($cursos as $curso)
+    <div class="card">
+        @if ($curso->miniatura)
+            <img src="{{ asset('storage/' . $curso->miniatura) }}" alt="Miniatura del curso">
+        @else
+            <img src="https://via.placeholder.com/400x200?text=Sin+imagen" alt="Sin miniatura">
+        @endif
 
-                    @if(auth()->user()->role === 'admin')
-                        <div class="card-actions">
-                            <a href="{{ route('cursos.edit', $curso) }}">Editar</a>
-                            <form action="{{ route('cursos.destroy', $curso) }}" method="POST" onsubmit="return confirm('¿Eliminar este curso?')">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit">Eliminar</button>
-                            </form>
-                        </div>
-                    @endif
-                </div>
-            @endforeach
+        <h4>{{ $curso->nombre }}</h4>
+
+        <button class="ver-descripcion-btn"
+                onclick="mostrarModal(`{{ addslashes($curso->nombre) }}`, `{{ addslashes($curso->descripcion) }}`)">
+            Leer descripción
+        </button>
+
+        <p><strong>Inscritos:</strong> {{ $curso->inscripciones_count }}</p>
+
+        <div class="card-actions">
+            <a href="{{ route('cursos.edit', $curso->id) }}">Editar</a>
+            <a href="{{ route('cursos.inscritos', $curso->id) }}">Ver inscritos</a>
+            <form action="{{ route('cursos.destroy', $curso->id) }}" method="POST" onsubmit="return confirm('¿Eliminar este curso?')">
+                @csrf
+                @method('DELETE')
+                <button type="submit">Eliminar</button>
+            </form>
         </div>
+    </div>
+@endforeach
+
+        </div>
+    @else
+        <div class="empty-msg">No hay cursos registrados aún.</div>
     @endif
+
 </div>
+
+<div id="descripcionModal" class="modal">
+    <div class="modal-content">
+        <span class="cerrar" onclick="cerrarModal()">&times;</span>
+        <h3 id="tituloCurso"></h3>
+        <p id="descripcionCurso"></p>
+    </div>
+</div>
+
+<script>
+    const cursoNombres = @json($cursoNombres);
+    const cursoInscritos = @json($cursoInscritos);
+</script>
+<script src="{{ asset('js/indexCurso.js') }}"></script>
+
 
 </body>
 </html>
+    

@@ -2,10 +2,28 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar curso</title>
     <link rel="stylesheet" href="{{ asset('css/editCurso.css') }}">
 </head>
 <body>
+    <nav>    
+<div class="logo">
+    <img src="{{ asset('img/educursos.png') }}" alt="EduCursos">
+</div>    <ul>
+        <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
+        <li><a href="{{ route('cursos.explorar') }}">Explorar</a></li>
+        @if(auth()->user()->role === 'admin')
+            <li><a href="{{ route('cursos.index') }}">Administrar Cursos</a></li>
+        @endif
+        <li>
+            <form action="{{ route('logout') }}" method="POST">
+                @csrf
+                <button type="submit">Cerrar sesión</button>
+            </form>
+        </li>
+    </ul>
+</nav>
 <div class="form-container">
     <h2>Editar curso</h2>
 

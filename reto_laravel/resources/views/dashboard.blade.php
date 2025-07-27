@@ -2,171 +2,18 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+    <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            background: #f0f2f5;
-            padding-top: 70px;
-            color: #333;
-        }
 
-        nav {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background-color: #1a1a2e;
-            color: white;
-            padding: 15px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 1000;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-        }
-
-        nav .logo {
-            font-weight: bold;
-            font-size: 22px;
-        }
-
-        nav ul {
-            list-style: none;
-            display: flex;
-            gap: 20px;
-        }
-
-        nav ul li a, nav ul li form button {
-            text-decoration: none;
-            color: #fff;
-            font-size: 15px;
-            background: none;
-            border: none;
-            cursor: pointer;
-        }
-
-        nav ul li a:hover,
-        nav ul li form button:hover {
-            text-decoration: underline;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: auto;
-            padding: 30px 20px;
-        }
-
-        h2, h3 {
-            margin-bottom: 20px;
-        }
-
-        .welcome {
-            background: white;
-            padding: 25px;
-            margin-bottom: 30px;
-            border-radius: 12px;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.05);
-        }
-
-        .alert {
-            background-color: #d4edda;
-            color: #155724;
-            padding: 10px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 25px;
-        }
-
-        .card {
-            background: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.08);
-            display: flex;
-            flex-direction: column;
-            transition: transform 0.2s;
-        }
-
-        .card:hover {
-            transform: scale(1.02);
-        }
-
-        .card img {
-            width: 100%;
-            height: 180px;
-            object-fit: cover;
-        }
-
-        .card .content {
-            padding: 15px;
-            flex-grow: 1;
-        }
-
-        .card h4 {
-            margin-bottom: 10px;
-            font-size: 18px;
-        }
-
-        .card .descripcion {
-            font-size: 14px;
-            color: #666;
-            max-height: 60px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .card .descripcion:hover::after {
-            content: attr(data-full);
-            position: absolute;
-            background: #fff;
-            padding: 10px;
-            border: 1px solid #ccc;
-            top: 0;
-            left: 0;
-            z-index: 1;
-            width: 100%;
-            max-height: 150px;
-            overflow-y: auto;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-        }
-
-        .card form {
-            padding: 10px 15px 15px;
-        }
-
-        .card form button {
-            background-color: #dc3545;
-            border: none;
-            color: white;
-            padding: 10px 15px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-
-        .no-result {
-            text-align: center;
-            color: #777;
-            margin-top: 30px;
-        }
-    </style>
 </head>
 <body>
-
-<nav>
-    <div class="logo">Mi Plataforma</div>
-    <ul>
+<nav>    
+<div class="logo">
+    <img src="{{ asset('img/educursos.png') }}" alt="EduCursos">
+</div>    <ul>
         <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
         <li><a href="{{ route('cursos.explorar') }}">Explorar</a></li>
         @if(auth()->user()->role === 'admin')
@@ -182,9 +29,8 @@
 </nav>
 
 <div class="container">
-
     <div class="welcome">
-        <h2>Hola {{ auth()->user()->name }} ({{ auth()->user()->role }})</h2>
+        <h2>Hola {{ auth()->user()->name }} </h2>
         <p>Bienvenido a tu panel. Aquí puedes revisar tus cursos o explorar nuevos.</p>
     </div>
 
@@ -195,6 +41,7 @@
     @if($cursos->count())
         <h3>Últimos Cursos Disponibles</h3>
         <div class="grid">
+            <!-- cursos -->
             @foreach($cursos as $curso)
                 <div class="card">
                     @if($curso->miniatura)
@@ -202,9 +49,8 @@
                     @endif
                     <div class="content">
                         <h4>{{ $curso->nombre }}</h4>
-                        <div class="descripcion" data-full="{{ $curso->descripcion }}">
-                            {{ \Illuminate\Support\Str::limit($curso->descripcion, 80) }}
-                        </div>
+                        <button class="ver-descripcion-btn" onclick="mostrarModal(`{{ addslashes($curso->nombre) }}`, `{{ addslashes($curso->descripcion) }}`)">Leer descripción
+                        </button>
                     </div>
                     <form action="{{ route('cursos.inscribirse', $curso->id) }}" method="POST">
                         @csrf
@@ -225,19 +71,77 @@
                     @endif
                     <div class="content">
                         <h4>{{ $curso->nombre }}</h4>
-                        <div class="descripcion" data-full="{{ $curso->descripcion }}">
-                            {{ \Illuminate\Support\Str::limit($curso->descripcion, 80) }}
-                        </div>
+                                
                     </div>
-                    <form action="{{ route('cursos.desinscribirse', $curso->id) }}" method="POST">
+                    <form action="{{ route('cursos.desinscribirse', $curso->id) }}" method="POST" onsubmit="event.preventDefault(); openModal(this);">
                         @csrf
-                        <button type="submit">Desinscribirme</button>
+                        @method('POST')
+                        <button id="desincribir" type="submit">Desinscribirme</button>
                     </form>
                 </div>
             @endforeach
         </div>
     @endif
-
 </div>
+<!-- footer -->
+<footer class="main-footer">
+    <div class="footer-container">
+        <div class="footer-section">
+            <h4>Quiénes somos</h4>
+            <p>Somos EduCursos, una plataforma dedicada a brindar educación accesible y de calidad a todos. Nuestra misión es empoderar a los estudiantes con conocimiento.</p>
+        </div>
+        <div class="footer-section">
+            <h4>Contacto</h4>
+            <p><i class="fas fa-map-marker-alt"></i> Calle Falsa 123, Bogotá, Colombia</p>
+            <p><i class="fas fa-envelope"></i> contacto@educursos.com</p>
+            <p><i class="fas fa-phone"></i> +57 301 123 4567</p>
+        </div>
+        <div class="footer-section">
+            <h4>Redes Sociales</h4>
+            <div class="social-icons">
+                <a href="#"><i class="fab fa-facebook-square"></i></a>
+                <a href="#"><i class="fab fa-twitter-square"></i></a>
+                <a href="#"><i class="fab fa-instagram-square"></i></a>
+                <a href="#"><i class="fab fa-linkedin"></i></a>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        &copy; 2025 EduCursos. Todos los derechos reservados.
+    </div>
+</footer>
+
+<!-- modal desincribirse -->
+<div id="modal-confirm" class="modal-confirm">
+    <div class="modal-dialog">
+        <div class="modal-header">
+            <i class="fas fa-exclamation-triangle"></i>
+            <h2>¿Estás seguro?</h2>
+        </div>
+        <div class="modal-body">
+            <p id="modal-message">Esta acción no se puede deshacer.</p>
+        </div>
+        <div class="modal-footer">
+            <button class="cancel-btn" onclick="closeModal()">Cancelar</button>
+            <form id="modal-form" method="POST" style="display: inline;">
+                @csrf
+                @method('POST')
+                <button type="submit" class="confirm-btn">Sí, continuar</button>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- modal descripcion -->
+<div id="descripcionModal" class="modal">
+    <div class="modal-content">
+        <span class="cerrar" onclick="cerrarModal()">&times;</span>
+        <h3 id="tituloCurso"></h3>
+        <p id="descripcionCurso"></p>
+    </div>
+</div>
+
+<script src="{{ asset('js/dashboard.js') }}"></script>
+
+
 </body>
 </html>

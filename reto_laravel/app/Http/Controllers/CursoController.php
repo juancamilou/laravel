@@ -5,15 +5,26 @@ namespace App\Http\Controllers;
 use App\Models\Curso;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Inscripcion;
+use App\Models\User;
+
+
 
 class CursoController extends Controller
 {
-    // Mostrar todos los cursos
-    public function index()
-    {
-        $cursos = Curso::all();
-        return view('cursos.index', compact('cursos'));
-    }
+public function index()
+{
+    $cursos = Curso::withCount('inscripciones')->get();
+    $totalCursos = $cursos->count();
+    $totalEstudiantes = User::where('role', 'student')->count();
+
+    // Preparar datos para el gráfico
+    $cursoNombres = $cursos->pluck('nombre');
+    $cursoInscritos = $cursos->pluck('inscripciones_count');
+
+    return view('cursos.index', compact('cursos', 'totalCursos', 'totalEstudiantes', 'cursoNombres', 'cursoInscritos'));
+}
+
 
     // Mostrar formulario para crear curso
     public function create()
@@ -94,28 +105,36 @@ class CursoController extends Controller
 
         return redirect()->route('cursos.index')->with('success', 'Curso eliminado.');
     }
-    public function inscribirse($id)
+   public function inscribirse($id)
 {
-    $curso = Curso::findOrFail($id);
+    $user = auth()->user();
 
-    if (auth()->user()->role === 'student') {
-        auth()->user()->cursos()->syncWithoutDetaching([$id]);
-        return redirect()->back()->with('success', 'Te has inscrito correctamente al curso.');
+    // Verificar si ya está inscrito
+    $yaInscrito = Inscripcion::where('curso_id', $id)
+        ->where('user_id', $user->id)
+        ->exists();
+
+    if ($yaInscrito) {
+        return redirect()->back()->with('success', 'Ya estás inscrito en este curso.');
     }
 
-    return redirect()->back()->with('error', 'Solo los estudiantes pueden inscribirse.');
+    // Guardar la inscripción
+    Inscripcion::create([
+        'curso_id' => $id,
+        'user_id' => $user->id
+    ]);
+
+    return redirect()->back()->with('success', 'Te has inscrito correctamente al curso.');
 }
 public function desinscribirse($id)
 {
     $curso = Curso::findOrFail($id);
 
-    if (auth()->user()->role === 'student') {
-        auth()->user()->cursos()->detach($id);
-        return redirect()->back()->with('success', 'Te has desinscrito del curso.');
-    }
+    auth()->user()->cursos()->detach($id);
 
-    return redirect()->back()->with('error', 'Solo los estudiantes pueden desinscribirse.');
+    return redirect()->back()->with('success', 'Te has desinscrito del curso.');
 }
+
 
 public function explorar(Request $request)
 {

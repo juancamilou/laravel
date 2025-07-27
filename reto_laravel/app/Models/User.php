@@ -29,9 +29,10 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-    public function cursos()
+public function cursos()
 {
-    return $this->belongsToMany(Curso::class);
+    return $this->belongsToMany(Curso::class, 'inscripcions', 'user_id', 'curso_id');
 }
+
 
 }
