@@ -4,8 +4,344 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Explorar Cursos</title>
-    <link rel="stylesheet" href="{{ asset('css/explorarCursos.css') }}">
+    <!-- <link rel="stylesheet" href="{{ asset('css/explorarCursos.css') }}"> -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: "Segoe UI", sans-serif;
+    background: #f0f2f5;
+    padding-top: 70px;
+    color: #333;
+}
+
+/* ========== nav ========== */
+nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 80px;
+    background-color: #1a1a2e;
+    color: white;
+    padding: 0 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1000;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+nav .logo {
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+nav .logo img {
+    height: 150px;
+    width: auto;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+nav ul li a,
+nav ul li form button {
+    text-decoration: none;
+    color: #fff;
+    font-size: 15px;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+nav ul li a:hover,
+nav ul li form button:hover {
+    text-decoration: underline;
+}
+
+/* ========== CONTAINER ========== */
+.container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 30px 20px;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+/* ========== BUSCADOR MEJORADO ========== */
+form.search {
+    display: flex;
+    max-width: 500px;
+    margin: 0 auto 40px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    border: 1px solid #ccc;
+}
+
+form.search input {
+    flex: 1;
+    padding: 12px 15px;
+    border: none;
+    font-size: 16px;
+    outline: none;
+}
+
+form.search button {
+    background-color: #007bff;
+    border: none;
+    color: white;
+    padding: 12px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+form.search button:hover {
+    background-color: #0056b3;
+}
+
+/* ========== TARJETAS ========== */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+}
+
+.card {
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: scale(1.02);
+}
+
+.card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.card .content {
+    padding: 15px;
+    flex-grow: 1;
+}
+
+.card h4 {
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+.card form {
+    padding: 10px 15px 15px;
+}
+
+.card form button {
+    background-color: #28a745;
+    border: none;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+}
+.btn-login-redirect {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #1a1a2e;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.btn-login-redirect:hover {
+    background-color: #007bff;
+    color: #fff;
+}
+
+/* ========== BOTÓN VER DESCRIPCIÓN ========== */
+.ver-descripcion-btn {
+    background-color: #6f42c1;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    margin-top: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+/* ========== MENSAJE SIN RESULTADOS ========== */
+.no-result {
+    display: none;
+    text-align: center;
+    color: #777;
+    font-size: 18px;
+    margin-top: 30px;
+}
+
+.no-result.show {
+    display: block;
+}
+
+/* ========== MODAL ========== */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 600px;
+    position: relative;
+    animation: fadeIn 0.3s ease-in-out;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+}
+
+.cerrar {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 22px;
+    cursor: pointer;
+    color: #aaa;
+}
+
+.cerrar:hover {
+    color: #000;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#descripcionCurso {
+    margin-top: 10px;
+    font-size: 16px;
+    color: #333;
+    line-height: 1.4;
+    max-height: 300px;
+    overflow-y: auto;
+    padding-right: 10px;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+}
+
+#descripcionCurso::-webkit-scrollbar {
+    width: 8px;
+}
+
+#descripcionCurso::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+#descripcionCurso::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+#descripcionCurso::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* ========== FOOTER ========== */
+.main-footer {
+    background-color: #1a1a2e;
+    color: #fff;
+    padding: 40px 20px 20px;
+    margin-top: 50px;
+}
+
+.footer-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: auto;
+}
+
+.footer-section {
+    flex: 1 1 250px;
+}
+
+.footer-section h4 {
+    font-size: 18px;
+    margin-bottom: 15px;
+    color: #ffc107;
+}
+
+.footer-section p {
+    font-size: 14px;
+    margin-bottom: 10px;
+    line-height: 1.6;
+}
+
+.social-icons a {
+    color: #fff;
+    font-size: 24px;
+    margin-right: 12px;
+    transition: color 0.3s ease;
+}
+
+.social-icons a:hover {
+    color: #ffc107;
+}
+
+.footer-bottom {
+    text-align: center;
+    margin-top: 30px;
+    font-size: 14px;
+    color: #aaa;
+    border-top: 1px solid #333;
+    padding-top: 15px;
+}
+
+    </style>
 </head>
 <body>
 
