@@ -40,3 +40,11 @@ Route::post('/cursos/{id}/inscribirse', [CursoController::class, 'inscribirse'])
 Route::post('/cursos/{id}/desinscribirse', [CursoController::class, 'desinscribirse'])->name('cursos.desinscribirse');
 Route::get('/explorar-cursos', [CursoController::class, 'explorar'])->name('cursos.explorar');
 });
+Route::get('/check-db', function () {
+    try {
+        DB::connection()->getPdo();
+        return 'Conectado a DB: ' . DB::connection()->getDatabaseName();
+    } catch (\Exception $e) {
+        return 'Error: ' . $e->getMessage();
+    }
+});
